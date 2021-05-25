@@ -24,8 +24,9 @@
 #      return                                                                  #
 #  end                                                                         #
 #To make this script activate upon loss.                                       #
-#Player Health in this script is regarded as the Trainer.money.                #
-#It could easily be replaced with a variable, and I will do that at some point.#
+#Player Health in this script is regarded as the Trainer.money, as that is     #
+#what it was in Pokemon Survival Island, I am absolutely positive variables    #
+#can be used instead. I used:                                                  #
 #------------------------------------------------------------------------------#
 # $game_switches[54] for the Survival Mode Switch, and put it in the options   #
 # menu personally.                                                             #
@@ -84,6 +85,7 @@ Events.onStepTakenTransferPossible+=proc {
 
 if $game_variables[205]>100
   $game_variables[205]=100 
+  $game_switches[250]=true
 end
 
 if $game_variables[206]>100
@@ -92,63 +94,83 @@ end
 
 if $game_variables[207]>100
  $game_variables[207]=100 
+ $game_switches[273]=true
 end
  
 if $game_variables[208]>100
  $game_variables[208]=100 
+ $game_switches[249]=true
+end
+
+if $game_variables[205]<0
+  $game_variables[205]=0 
+end
+
+if $game_variables[206]<0
+  $game_variables[206]=0 
+end
+
+if $game_variables[207]<0
+ $game_variables[207]=0 
+ $game_switches[273]=true
+end
+ 
+if $game_variables[208]<0
+ $game_variables[208]=0 
+ $game_switches[249]=true
 end
 
 if $Trainer.money>100
  $Trainer.money=100 
 end
-#These are here to make sure values do not go above 100.
 
 if $game_switches[54]==true #Survival Mode Switch
  case $game_variables[208]
   when 0
    if $game_switches[249]==true
     pbMessage(_INTL("You are passing out from lack of sleep!"))
-	#Achievements.incrementProgress("INSOMNIA",1)
-    $Trainer.money -= 20
+	Achievements.incrementProgress("INSOMNIA",1)
+    $Trainer.money -= 5
     $game_switches[249]=false
    else
-    $Trainer.money -= 20
+    $Trainer.money -= 5
    end
   else
-   $game_variables[208] -= 1 if rand(50) == 0 #take from sleep
+   $game_variables[208] -= 1 if rand(20) == 5 #take from sleep
 end
 
 if $game_switches[54]==true #Survival Mode Switch
  case $game_variables[207]
   when 0
-   $game_variables[205] -= 1 if rand(10) == 0 #take from hunger
-   $game_variables[206] -= 1 if rand(10) == 0 #take from drinking
-   $game_variables[207] -= 1 if rand(10) == 0 #take from saturation
+   $game_variables[205] -= 1 if rand(10) == 5 #take from hunger
+   $game_variables[206] -= 1 if rand(10) == 5 #take from drinking
+  else
+   $game_variables[207] -= 1 if rand(10) == 5 #take from saturation
 end
 
 if $game_switches[54]==true #Survival Mode Switch
   case $game_variables[205]
    when 0
-    if $game_switches[249]==true
+    if $game_switches[250]==true
       pbMessage(_INTL("You are passing out from lack of food!"))
-	  #Achievements.incrementProgress("STARVING",1)
-      $Trainer.money -= 20
-      $game_switches[249]=false
+	  Achievements.incrementProgress("STARVING",1)
+      $Trainer.money -= 5
+      $game_switches[250]=false
     else
-      $Trainer.money -= 20
+      $Trainer.money -= 5
    end
 end
 
 if $game_switches[54]==true #Survival Mode Switch
   case $game_variables[206]
    when 0
-    if $game_switches[249]==true
+    if $game_switches[273]==true
       pbMessage(_INTL("You are passing out from lack of water!"))
-	  #Achievements.incrementProgress("THIRSTY",1)
-      $Trainer.money -= 20
-      $game_switches[249]=false
+	  Achievements.incrementProgress("THIRSTY",1)
+      $Trainer.money -= 5
+      $game_switches[273]=false
     else
-      $Trainer.money -= 20
+      $Trainer.money -= 5
    end
 end
 end
@@ -159,7 +181,7 @@ end
 if $Trainer.money < 1
   if $game_switches[54] == true
       pbMessage(_INTL("\\w[]\\wm\\c[8]\\l[3]Game Over"))
-	  #Achievements.incrementProgress("DEAD",1)
+	  Achievements.incrementProgress("DEAD",1)
       pbCancelVehicles
       pbRemoveDependencies
       pbEndGame
@@ -170,12 +192,12 @@ end
 
 def pbSleepRestore
  if $game_variables[208]<100
-  $game_variables[208]=$game_variables[208]+$game_variables[247]*3
+  $game_variables[208]=$game_variables[208]+($game_variables[247]*6)
  end
 end
 
 #Eating Food
-def pbFillUp #it was originally pbPickandEatBerry, but I added some nonberries to the line up, so I changed it .
+def pbFillUp
 berry=0
 pbFadeOutIn(99999){
 scene = PokemonBag_Scene.new
@@ -206,30 +228,82 @@ $game_variables[207]+=4
 $game_variables[206]+=4
 $Trainer.money += 2
 elsif isConst?(berry,PBItems,:FRESHWATER)
-$game_variables[206]+=10
+$game_variables[206]+=20
+$game_variables[207]+=10#207 is Saturation
 #You can add more if you want
-elsif isConst?(berry,PBItems,:RAGECANDYBAR) 
+elsif isConst?(berry,PBItems,:ATKCURRY)
+$game_variables[205]+=8
+$game_variables[207]+=15
+$game_variables[206]-=7
+elsif isConst?(berry,PBItems,:SATKCURRY)
+$game_variables[205]+=8
+$game_variables[207]+=15
+$game_variables[206]-=7
+elsif isConst?(berry,PBItems,:SPEEDCURRY)
+$game_variables[205]+=8
+$game_variables[207]+=15
+$game_variables[206]-=7
+elsif isConst?(berry,PBItems,:SPDEFCURRY)
+$game_variables[205]+=8
+$game_variables[207]+=15
+$game_variables[206]-=7
+elsif isConst?(berry,PBItems,:ACCCURRY)
+$game_variables[205]+=8
+$game_variables[207]+=12
+$game_variables[206]-=7
+elsif isConst?(berry,PBItems,:DEFCURRY)
+$game_variables[205]+=8
+$game_variables[207]+=15
+$game_variables[206]-=7
+elsif isConst?(berry,PBItems,:CRITCURRY)
+$game_variables[205]+=8
+$game_variables[207]+=15
+$game_variables[206]-=7
+elsif isConst?(berry,PBItems,:GSCURRY)
+$game_variables[205]+=8#205 is Hunger
+$game_variables[207]+=5#207 is Saturation
+$game_variables[206]-=7#206 is Thirst
+elsif isConst?(berry,PBItems,:RAGECANDYBAR) #chocolate
 $game_variables[205]+=10
 $game_variables[207]+=3
 $game_variables[208]+=7
-elsif isConst?(berry,PBItems,:SWEETHEART) 
+elsif isConst?(berry,PBItems,:SWEETHEART) #chocolate
 $game_variables[205]+=10#205 is Hunger
 $game_variables[207]+=5#207 is Saturation
 $game_variables[208]+=6#208 is Sleep
 elsif isConst?(berry,PBItems,:SODAPOP)
 $game_variables[206]-=11#206 is Thirst
+$game_variables[207]+=11#207 is Saturation
 $game_variables[208]+=10#208 is Sleep
 elsif isConst?(berry,PBItems,:LEMONADE)
-$game_variables[207]+=5#207 is Saturation
+$game_variables[207]+=11#207 is Saturation
 $game_variables[206]+=7#206 is Thirst
 $game_variables[208]+=3#208 is Sleep
 elsif isConst?(berry,PBItems,:HONEY)
-$game_variables[207]+=10#207 is Saturation
+$game_variables[207]+=20#207 is Saturation
 $game_variables[206]+=2#206 is Thirst
 $game_variables[205]+=6#205 is Hunger
 elsif isConst?(berry,PBItems,:MOOMOOMILK)
-$game_variables[207]+=5
+$game_variables[207]+=10
 $game_variables[206]+=7
+elsif isConst?(berry,PBItems,:CSLOWPOKETAIL)
+$game_variables[207]+=10#207 is Saturation
+$game_variables[205]+=10#205 is Hunger
+elsif isConst?(berry,PBItems,:BAKEDPOTATO)
+$game_variables[207]+=10#207 is Saturation
+$game_variables[206]+=4#206 is Thirst
+$game_variables[205]+=7#205 is Hunger
+elsif isConst?(berry,PBItems,:APPLE)
+$game_variables[207]+=10#207 is Saturation
+$game_variables[206]+=3#206 is Thirst
+$game_variables[205]+=3#205 is Hunger
+elsif isConst?(berry,PBItems,:CHOCOLATE)
+$game_variables[207]+=5#207 is Saturation
+$game_variables[205]+=7#205 is Hunger
+elsif isConst?(berry,PBItems,:LEMON)
+$game_variables[207]+=3#207 is Saturation
+$game_variables[206]+=3#206 is Thirst
+$game_variables[205]+=4#205 is Hunger
 elsif isConst?(berry,PBItems,:OLDGATEAU)
 $game_variables[207]+=6#207 is Saturation
 $game_variables[206]+=2#206 is Thirst
@@ -250,6 +324,14 @@ $game_variables[205]+=8#205 is Hunger
 elsif isConst?(berry,PBItems,:BIGMALASADA)
 $game_variables[207]+=8#207 is Saturation
 $game_variables[205]+=8#205 is Hunger
+elsif isConst?(berry,PBItems,:ONION)
+$game_variables[207]+=5#207 is Saturation
+$game_variables[206]+=3#206 is Thirst
+$game_variables[205]+=3#205 is Hunger
+elsif isConst?(berry,PBItems,:COOKEDORAN)
+$game_variables[207]+=6#207 is Saturation
+$game_variables[206]+=6#206 is Thirst
+$game_variables[205]+=6#205 is Hunger
 #full belly
 end
 end
@@ -289,6 +371,7 @@ def pbEndGame
          $game_temp.player_new_y=007
          $game_temp.player_new_direction=$PokemonGlobal.pokecenterDirection
          $scene.transfer_player
+         #$game_map.need_refresh=true # in case player moves to the same map
       }
     end
 end
