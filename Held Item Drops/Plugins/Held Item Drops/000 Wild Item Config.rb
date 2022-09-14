@@ -1,8 +1,8 @@
 module ItemDropsConfig
 # Config for amount dropped by each.
-Common_Item_Quantity=rand(3)+1
-Uncommon_Item_Quantity=rand(3)+1
-Rare_Item_Quantity=rand(3)+1
+Common_Item_Quantity=rand(2)+1
+Uncommon_Item_Quantity=rand(2)+1
+Rare_Item_Quantity=rand(2)+1
 
 #Normal Chances
 Common_Item_Chance=50
