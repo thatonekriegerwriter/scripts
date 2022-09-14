@@ -23,6 +23,8 @@ class Battle::Scene
   end
     droprnd = rand(100)
       if (wildDrop[0]==wildDrop[1] && wildDrop[1]==wildDrop[2]) || droprnd<chances[0]
+	    if wildDrop[0].nil?
+		else
 	    item = wildDrop[0].sample
 		item = GameData::Item.get(item)
         if $bag.add(item,firstqty)
@@ -30,8 +32,11 @@ class Battle::Scene
           pocket = item.pocket
           @battle.pbDisplayPaused(_INTL("{1} dropped\n{2} <icon=bagPocket#{pocket}> x{3}!",b.pbThis,itemname,firstqty))
         end
+		end
       end
       if droprnd<chances[1]
+	    if wildDrop[1].nil?
+		else
 	    item = wildDrop[1].sample
 		item = GameData::Item.get(item)
         if $bag.add(item,secondqty)
@@ -39,8 +44,11 @@ class Battle::Scene
           pocket = item.pocket
           @battle.pbDisplayPaused(_INTL("{1} dropped\n{2} <icon=bagPocket#{pocket}> x{3}!",b.pbThis,itemname,secondqty))
         end
+		end
       end
       if droprnd<chances[2]
+	    if wildDrop[2].nil?
+		else
 	    item = wildDrop[2].sample
 		item = GameData::Item.get(item)
         if $bag.add(item,thirdqty)
@@ -48,6 +56,7 @@ class Battle::Scene
           pocket = item.pocket
           @battle.pbDisplayPaused(_INTL("{1} dropped\n{2} <icon=bagPocket#{pocket}> x{3}!",b.pbThis,itemname,thirdqty))
         end
+	   end
       end
     }
     @battleEnd = true
