@@ -1330,7 +1330,7 @@ class PokemonSystem
 end
 
 
-end
+
 
 MenuHandlers.add(:options_menu, :survivalmode, {
   "name"        => _INTL("Survival Mode"),
