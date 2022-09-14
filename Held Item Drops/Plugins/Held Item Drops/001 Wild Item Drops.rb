@@ -1,3 +1,6 @@
+#Settings
+
+
 
 class Battle::Scene
   def pbWildBattleSuccess
@@ -8,25 +11,27 @@ class Battle::Scene
     next if !pkmn
     next if pkmn.wildHoldItems.nil?
     wildDrop = pkmn.wildHoldItems
-    firstqty = rand(3)+1
-    secondqty = rand(3)+1
-    thirdqty = rand(3)+1
+    firstqty = ItemDropsConfig::Common_Item_Quantity
+    secondqty = ItemDropsConfig::Uncommon_Item_Quantity
+    thirdqty = ItemDropsConfig::Rare_Item_Quantity
 	firstPkmn = $player.first_pokemon
-    chances = [50,20,5]
+    chances = [ItemDropsConfig::Common_Item_Chance,ItemDropsConfig::Uncommon_Item_Chance,ItemDropsConfig::Rare_Item_Chance]
   if firstPkmn
     case firstPkmn.ability_id
     when :COMPOUNDEYES
+      chances = [ItemDropsConfig::Common_Compound_Chance,ItemDropsConfig::Uncommon_Compound_Chance,ItemDropsConfig::Rare_Compound_Chance]
       chances = [60,40,15]
     when :SUPERLUCK
+      chances = [ItemDropsConfig::Common_SuperLuck_Chance,ItemDropsConfig::Uncommon_SuperLuck_Chance,ItemDropsConfig::Rare_SuperLuck_Chance]
       chances = [50,50,50]
     end
   end
     droprnd = rand(100)
       if (wildDrop[0]==wildDrop[1] && wildDrop[1]==wildDrop[2]) || droprnd<chances[0]
-	    if wildDrop[0].nil?
-		else
 	    item = wildDrop[0].sample
-		item = GameData::Item.get(item)
+	    if item.nil?
+		else
+		item = GameData::Item.get(item) 
         if $bag.add(item,firstqty)
           itemname = GameData::Item.get(item).name
           pocket = item.pocket
@@ -35,9 +40,9 @@ class Battle::Scene
 		end
       end
       if droprnd<chances[1]
-	    if wildDrop[1].nil?
-		else
 	    item = wildDrop[1].sample
+	    if item.nil?
+		else
 		item = GameData::Item.get(item)
         if $bag.add(item,secondqty)
           itemname = GameData::Item.get(item).name
@@ -47,9 +52,9 @@ class Battle::Scene
 		end
       end
       if droprnd<chances[2]
-	    if wildDrop[2].nil?
-		else
 	    item = wildDrop[2].sample
+	    if item.nil?
+		else
 		item = GameData::Item.get(item)
         if $bag.add(item,thirdqty)
           itemname = GameData::Item.get(item).name
