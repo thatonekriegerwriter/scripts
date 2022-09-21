@@ -44,7 +44,7 @@
 # * Setting to Toggle between Whitelist or Blacklist, if WHITELIST = True, only Pokemon in SOS_WHITELIST_RATES will appear.
 # * If WHITELIST = False, it will check the SOS_BLACKLIST to see if a Pokemon is banned from calling. If Whitelist is false, a SOS_RATE must be defined.
   
-  WHITELIST = false 
+  WHITELIST = true 
 # * Hash containing base species call rates
   SOS_WHITELIST_RATES={} 
 # * Hash containing blacklisted Pokemon.
