@@ -1,30 +1,32 @@
   EventHandlers.add(:on_step_taken, :foodstepsplayer,
   proc {
-  return if $PokemonSystem.survivalmode==1
+  if $PokemonSystem.survivalmode==0
   $PokemonGlobal.playerfoodSteps = 0 if !$PokemonGlobal.playerfoodSteps
   $PokemonGlobal.playerfoodSteps += 1 if $player.playersaturation == 0
   if $PokemonGlobal.playerfoodSteps>=100
     $player.playerfood -= 1 if rand(100) == 1
     $PokemonGlobal.playerfoodSteps = 0
   end
+  end
   }
 )
 
   EventHandlers.add(:on_step_taken, :waterstepsplayer,
   proc {
-  return if $PokemonSystem.survivalmode==1
+  if $PokemonSystem.survivalmode==0
   $PokemonGlobal.playerwaterSteps = 0 if !$PokemonGlobal.playerwaterSteps
   $PokemonGlobal.playerwaterSteps += 1 if $player.playersaturation == 0
   if $PokemonGlobal.playerwaterSteps>=100
     $player.playerwater -= 1 if rand(100) == 1
     $PokemonGlobal.playerwaterSteps = 0
   end
+  end
   }
 )
 
   EventHandlers.add(:on_step_taken, :agestepspkmn,
   proc {
-  return if $PokemonSystem.survivalmode==1
+  if $PokemonSystem.survivalmode==0
   $player.pokemon_party.each do |pkmn|
   if pbIsWeekday(6) 
     if pkmn.lifespan == 0 
@@ -37,6 +39,7 @@
 	pkmn.changeLifespan("age",pkmn)
   end
 end
+end
   }
 )
 
@@ -44,20 +47,26 @@ end
 
   EventHandlers.add(:on_step_taken, :saturationstepsplayer,
   proc {
-  return if $PokemonSystem.survivalmode==1
+   if $PokemonSystem.survivalmode==0
   $PokemonGlobal.playersaturationSteps = 100 if !$PokemonGlobal.playersaturationSteps
   $PokemonGlobal.playersaturationSteps += 1
   if $PokemonGlobal.playersaturationSteps>=100
     $player.playersaturation -= 1 if rand(100) <= 3
     $PokemonGlobal.playersaturationSteps = 100
   end
+   end
   }
 )
 
   EventHandlers.add(:on_frame_update, :stamina,
   proc {
-  return if $PokemonSystem.survivalmode==1
-  
+   if $PokemonSystem.survivalmode==0
+    if $player.playerhealth.nil?
+	  $player.playerhealth = 100
+	end
+    if $player.playerstamina.nil?
+	  $player.playerhealth = 100
+	end
     if $player.playerhealth < 1
       pbStartOver
     end 
@@ -72,6 +81,7 @@ end
 	else
 	   $player.playerstamina+=3 if rand(25) == 1
 	end
+   end
   }
 )
 
@@ -79,7 +89,7 @@ end
 
   EventHandlers.add(:on_step_taken, :foodstepspkmn,
   proc {
-  return if $PokemonSystem.survivalmode==1
+  if $PokemonSystem.survivalmode==0
   $PokemonGlobal.pkmnfoodSteps = 100 if !$PokemonGlobal.pkmnfoodSteps
   $PokemonGlobal.pkmnfoodSteps += 1
   if $PokemonGlobal.pkmnfoodSteps>=100
@@ -90,12 +100,13 @@ end
     end
     $PokemonGlobal.pkmnfoodSteps = 120
   end
+  end
   }
 )
 
   EventHandlers.add(:on_step_taken, :waterstepspkmn,
   proc {
-  return if $PokemonSystem.survivalmode==1
+  if $PokemonSystem.survivalmode==0
   $PokemonGlobal.pkmnthirstSteps = 100 if !$PokemonGlobal.pkmnthirstSteps
   $PokemonGlobal.pkmnthirstSteps += 1
   if $PokemonGlobal.pkmnthirstSteps>=100
@@ -105,6 +116,7 @@ end
        end
     end
     $PokemonGlobal.pkmnthirstSteps = 120
+  end
   end
   }
 )
